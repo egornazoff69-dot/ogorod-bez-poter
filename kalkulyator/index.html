@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор посева на рассаду 2027 — когда сеять в вашем регионе</title>
+<meta name="description" content="Выберите регион и культуру — калькулятор покажет, когда сеять семена на рассаду и когда высаживать в теплицу или грунт в 2027 году.">
+<link rel="canonical" href="https://ogorod-bez-poter.ru/kalkulyator/">
+<link rel="stylesheet" href="/style.css">
+</head><body>
+<header class="top"><div class="wrap"><a class="logo" href="/">🌱 Огород без потерь</a>
+<a class="btn-max" href="https://max.ru/join/cFJpmedkBX0e6sbP9-gcAVOI_UQGB_HrdCM5as-Ifo0" data-goal="max">Канал в Максе</a></div></header>
+<main class="wrap">
+<h1>Когда сеять на рассаду в 2027 году</h1>
+<p>Выберите регион, культуру и где будете выращивать — калькулятор посчитает даты посева и высадки.</p>
+<div class="calc">
+<label for="reg">Ваш регион</label>
+<select id="reg">
+<option value="yug">Юг (Краснодар, Ростов, Крым)</option>
+<option value="centr" selected>Центр (Москва, Тула, Рязань)</option>
+<option value="sz">Северо-Запад (Петербург, Новгород)</option>
+<option value="volga">Поволжье (Самара, Казань, Н. Новгород)</option>
+<option value="ural">Урал (Екатеринбург, Пермь, Челябинск)</option>
+<option value="sib">Сибирь (Новосибирск, Омск, Красноярск)</option>
+</select>
+<label for="mesto">Где будет расти</label>
+<select id="mesto">
+<option value="0">Теплица без обогрева</option>
+<option value="1">Грядка под плёнкой</option>
+<option value="2">Открытая грядка</option>
+</select>
+<label for="kult">Культура</label>
+<select id="kult"></select>
+</div>
+<div class="cta" id="res" aria-live="polite"></div>
+<blockquote>Весна поздняя или холодная — сдвигайте все даты на неделю позже. Переросшая рассада приживается хуже молодой.</blockquote>
+<aside class="guide"><p class="cta-t">Нужны сроки сразу для всех культур?</p>
+<p>В гайде «Огород без потерь — 2027» — таблицы для 6 регионов, график подкормок и чек-листы на каждый месяц.</p>
+<a class="btn-big alt" href="/gajd/" data-goal="guide">Посмотреть гайд</a></aside>
+</main>
+<script>
+// начало окна высадки: [месяц, день] для теплицы / плёнки / открытого грунта
+var REG = {
+  yug:[[4,15],[5,1],[5,10]], centr:[[5,10],[5,25],[6,5]], sz:[[5,20],[6,1],[6,10]],
+  volga:[[5,10],[5,20],[6,1]], ural:[[5,20],[6,5],[6,10]], sib:[[5,20],[6,5],[6,10]]
+};
+// [название, недель до высадки от, до, теплолюбивая (только после заморозков)]
+var K = [
+  ['Перец',10,9],['Баклажан',10,9],['Томат высокорослый',9,8],['Томат низкорослый',8,7],
+  ['Капуста ранняя',8,7],['Капуста поздняя',7,6],['Огурец',4,3],['Кабачок, тыква',4,3],
+  ['Петуния',12,10],['Бархатцы',7,6],['Лук из семян, порей',10,9]
+];
+var kult = document.getElementById('kult');
+K.forEach(function(k,i){var o=document.createElement('option');o.value=i;o.textContent=k[0];kult.appendChild(o)});
+kult.value=2;
+var M=['января','февраля','марта','апреля','мая','июня','июля'];
+function fmt(d){return d.getDate()+' '+M[d.getMonth()]}
+function calc(){
+  var r=REG[document.getElementById('reg').value][document.getElementById('mesto').value];
+  var k=K[kult.value];
+  var plant=new Date(2027,r[0]-1,r[1]);
+  var s1=new Date(plant), s2=new Date(plant);
+  s1.setDate(s1.getDate()-k[1]*7); s2.setDate(s2.getDate()-k[2]*7);
+  document.getElementById('res').innerHTML=
+    '<p class="cta-t">'+k[0]+': сеять с '+fmt(s1)+' по '+fmt(s2)+'</p>'+
+    '<p>Высаживать — с '+fmt(plant)+', когда пройдут заморозки и земля прогреется до +12…+15 °C.</p>'+
+    '<p>Закаливать начните за 10–14 дней до высадки: с '+fmt(new Date(plant.getTime()-12*864e5))+'.</p>'+
+    '<a class="btn-big" href="https://max.ru/join/cFJpmedkBX0e6sbP9-gcAVOI_UQGB_HrdCM5as-Ifo0" data-goal="max">Получать напоминания в Максе</a>';
+}
+['reg','mesto','kult'].forEach(function(id){document.getElementById(id).addEventListener('change',calc)});
+calc();
+</script>
+<script src="/site.js"></script>
+</body></html>

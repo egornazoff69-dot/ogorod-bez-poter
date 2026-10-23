@@ -1,0 +1,34 @@
+:root{--g:#2f6b3a;--g2:#e8f2e3;--o:#d9772b;--t:#222;--bg:#fbfaf5}
+*{box-sizing:border-box}
+body{margin:0;font:20px/1.65 Georgia,"PT Serif",serif;color:var(--t);background:var(--bg)}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+a{color:var(--g)}
+.top{background:#fff;border-bottom:3px solid var(--g);position:sticky;top:0;z-index:5}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:8px}
+.logo{font:700 24px/1.2 Arial,sans-serif;text-decoration:none;color:var(--g)}
+.btn-max{white-space:nowrap;font:700 17px Arial,sans-serif;background:var(--g);color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none}
+.rub{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px;font:16px Arial,sans-serif;white-space:nowrap}
+.rub a{text-decoration:none}
+h1{font:700 36px/1.2 Arial,sans-serif;margin:24px 0 10px}
+h2{font:700 28px/1.25 Arial,sans-serif;margin:36px 0 10px;color:var(--g)}
+h3{font:700 22px/1.3 Arial,sans-serif;margin:24px 0 8px}
+.meta,.crumbs{font:15px Arial,sans-serif;color:#666}
+table{border-collapse:collapse;width:100%;font-size:17px;display:block;overflow-x:auto;margin:16px 0}
+th,td{border:1px solid #cfd8c8;padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--g2)}
+blockquote{margin:16px 0;padding:12px 18px;background:#fff6e8;border-left:5px solid var(--o)}
+.cta,.guide,.hero{background:var(--g2);border-radius:16px;padding:22px;margin:30px 0}
+.guide{background:#fff6e8}
+.cta-t{font:700 22px/1.3 Arial,sans-serif;margin:0 0 8px}
+.btn-big{display:inline-block;font:700 20px Arial,sans-serif;background:var(--g);color:#fff;padding:16px 26px;border-radius:12px;text-decoration:none;margin-top:6px}
+.btn-big.alt{background:var(--o)}
+.cards{list-style:none;padding:0}
+.cards li{margin:0 0 14px}
+.cards a{display:block;background:#fff;border:1px solid #dfe6d8;border-radius:12px;padding:16px;text-decoration:none;color:var(--t)}
+.cards b{display:block;font:700 21px/1.3 Arial,sans-serif;color:var(--g)}
+.cards span{font-size:17px;color:#555}
+.rel li{margin:6px 0}
+.foot{border-top:1px solid #ddd;margin-top:40px;font:15px Arial,sans-serif;color:#666;padding-bottom:30px}
+.calc label{display:block;font:700 19px Arial,sans-serif;margin:16px 0 6px}
+.calc select,.calc input{font-size:20px;padding:10px;width:100%;border-radius:10px;border:2px solid #b9c7b0}
+@media(max-width:600px){body{font-size:19px}h1{font-size:30px}.btn-max{font-size:15px;padding:8px 10px}}
