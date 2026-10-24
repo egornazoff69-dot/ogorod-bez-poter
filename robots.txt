@@ -1,2 +1,3 @@
 User-agent: *
-Disallow: /
+Disallow: /spasibo/
+Sitemap: https://ogorod-bez-poter.ru/sitemap.xml
