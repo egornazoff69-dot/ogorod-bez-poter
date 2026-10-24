@@ -267,3 +267,20 @@ h2:after{content:"";display:block;width:64px;height:4px;border-radius:4px;backgr
 .qa{flex-direction:column;align-items:stretch}.qa .rb{text-align:left;border-radius:16px}
 .qres .cta-t{font-size:26px;color:var(--g)}.qs{font-size:19px}
 @media(max-width:640px){.tbn{flex-wrap:wrap}.tbn em{margin-left:0}.pg{height:6px}}
+[hidden]{display:none!important}
+.game{display:flex;align-items:center;gap:6px;background:var(--g2);border:2px solid #c5dcbb;border-radius:999px;padding:4px 10px;cursor:pointer;font:800 15px var(--fh);color:var(--g);min-height:44px}
+.game span{font-size:22px}.game i{width:44px;height:8px;background:#fff;border-radius:8px;overflow:hidden;display:block}.game u{display:block;height:100%;width:0;background:var(--o);transition:width .3s}
+.bar{gap:8px}
+.gwin{position:fixed;inset:0;background:rgba(30,40,25,.55);z-index:80;display:flex;align-items:center;justify-content:center;padding:16px}
+.gbox{position:relative;background:#fff;border-radius:24px;max-width:460px;width:100%;padding:24px;text-align:center}
+.gbox ul{text-align:left;list-style:none;padding:0;font:17px/1.6 var(--fb)}.gbox li.ok{color:var(--g)}.gbox li.ok:before{content:"✅ "}.gbox li:not(.ok):before{content:"⬜ "}
+.gbox .cta-t{font-size:26px;color:var(--g)}
+.gtoast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--g);color:#fff;border-radius:999px;padding:10px 18px;font:700 16px var(--fh);z-index:90;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+@media(max-width:640px){.game b{display:none}.game i{width:36px}}
+
+.cbn{display:flex;align-items:center;gap:18px;text-decoration:none;color:var(--t);background:linear-gradient(135deg,#e8f2e3,#f6efd9);border:2px solid #cfe3c6;border-radius:20px;padding:12px;margin:24px 0}
+.cbn img{width:200px;height:200px;border-radius:14px;object-fit:cover;flex:none}
+.cbn b{display:block;font:800 24px/1.25 var(--fh);color:var(--g);margin-bottom:6px}.cbn i{display:block;font:18px/1.45 var(--fb);font-style:normal;margin-bottom:12px}
+.cbn em{display:inline-block;font:800 18px var(--fh);font-style:normal;background:var(--o);color:#fff;border-radius:999px;padding:11px 22px}
+.calcpic{display:block;width:100%;max-width:340px;height:auto;margin:10px auto 16px;border-radius:18px}
+@media(max-width:640px){.cbn{flex-direction:column;text-align:center}.cbn img{width:100%;height:auto;aspect-ratio:1}}

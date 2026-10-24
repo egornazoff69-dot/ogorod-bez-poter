@@ -136,3 +136,52 @@ document.addEventListener('click', function (e) {
   }
   show();
 })();
+
+// «Мой огород»: очки за полезные действия, 5 уровней, подарок в Максе на последнем
+(function () {
+  var G = document.getElementById('game'); if (!G) return;
+  var STAGES = ['🌰', '🌱', '🌿', '🌼', '🍅'];
+  var NAMES = ['Семечко', 'Росток', 'Рассада', 'Цветёт', 'Урожай'];
+  var TASKS = [
+    ['visit', 'Заглянуть на сайт'], ['read', 'Дочитать статью'], ['mon', 'Отметить задачу месяца'],
+    ['quiz', 'Пройти тест'], ['poll', 'Ответить в опросе']
+  ];
+  var state = JSON.parse(localStorage.getItem('game') || '{"d":{},"days":[]}');
+  function save() { localStorage.setItem('game', JSON.stringify(state)); }
+  function done() { return TASKS.filter(function (t) { return state.d[t[0]]; }).length; }
+  function render() {
+    var n = done(); G.hidden = false;
+    document.getElementById('game-i').textContent = STAGES[Math.min(n, 4)];
+    document.getElementById('game-n').textContent = n + '/5';
+    document.querySelector('#game-b u').style.width = (n / 5 * 100) + '%';
+  }
+  function toast(t) { var e = document.createElement('div'); e.className = 'gtoast'; e.textContent = t; document.body.appendChild(e); setTimeout(function () { e.remove(); }, 2600); }
+  function award(k) {
+    if (state.d[k]) return; state.d[k] = 1; save(); render();
+    var n = done(), t = TASKS.filter(function (x) { return x[0] === k; })[0][1];
+    toast(STAGES[Math.min(n, 4)] + ' ' + t + ' — ' + n + ' из 5');
+    if (n === 5) { openWin(true); if (window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', 'game_done'); }
+  }
+  function openWin(final) {
+    var n = done(), w = document.getElementById('gwin'), l = document.getElementById('gwin-l');
+    document.getElementById('gwin-t').textContent = final ? 'Урожай собран! 🍅' : STAGES[Math.min(n, 4)] + ' ' + NAMES[Math.min(n, 4)];
+    document.getElementById('gwin-s').textContent = final ? 'Вы выполнили все пять действий. Заберите подарок: мини-гайд «7 ошибок с рассадой» в нашем канале.' : 'Выполните 5 действий — вырастите огород и получите подарок в Максе.';
+    l.innerHTML = ''; TASKS.forEach(function (t) { var li = document.createElement('li'); li.textContent = t[1]; if (state.d[t[0]]) li.className = 'ok'; l.appendChild(li); });
+    document.getElementById('gwin-a').hidden = !final && n < 5; w.hidden = false;
+  }
+  G.addEventListener('click', function () { openWin(done() === 5); });
+  document.getElementById('gwin-x').addEventListener('click', function () { document.getElementById('gwin').hidden = true; });
+  document.getElementById('gwin').addEventListener('click', function (e) { if (e.target.id === 'gwin') e.target.hidden = true; });
+  render(); award('visit');
+  // дочитал статью (до 85% прокрутки)
+  if (document.getElementById('pg')) window.addEventListener('scroll', function f() {
+    var h = document.documentElement; if (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) > .85) { award('read'); window.removeEventListener('scroll', f); }
+  }, { passive: true });
+  document.addEventListener('change', function (e) { if (e.target.closest && e.target.closest('#mon-list') && e.target.checked) award('mon'); });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#poll .rb')) award('poll');
+    if (e.target.closest('#quiz #qa .rb') && document.querySelector('#qres:not([hidden])')) award('quiz');
+  });
+  var obs = document.getElementById('qres');
+  if (obs) new MutationObserver(function () { if (!obs.hidden) award('quiz'); }).observe(obs, { attributes: true, attributeFilter: ['hidden'] });
+})();
