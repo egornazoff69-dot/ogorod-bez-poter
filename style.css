@@ -284,3 +284,6 @@ h2:after{content:"";display:block;width:64px;height:4px;border-radius:4px;backgr
 .cbn em{display:inline-block;font:800 18px var(--fh);font-style:normal;background:var(--o);color:#fff;border-radius:999px;padding:11px 22px}
 .calcpic{display:block;width:100%;max-width:340px;height:auto;margin:10px auto 16px;border-radius:18px}
 @media(max-width:640px){.cbn{flex-direction:column;text-align:center}.cbn img{width:100%;height:auto;aspect-ratio:1}}
+
+.btn-max{flex:none}.logo{min-width:0}
+@media(max-width:480px){.btn-max .x{display:none}.logo{font-size:15px}.logo img{width:34px;height:34px}.bar{gap:6px;padding:6px 10px}.game{padding:4px 8px}.game i{width:26px}.btn-max{padding:5px 12px 5px 5px}.gtoast{max-width:90vw;text-align:center;border-radius:18px;font-size:15px;white-space:normal}}
