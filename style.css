@@ -116,3 +116,6 @@ blockquote.gp p{margin:0}
 .gbuy{text-align:center;justify-content:center}
 @media(max-width:640px){.gh{flex-direction:column;text-align:center}.gh img{width:240px}.gi{grid-template-columns:1fr}.price b{font-size:38px}}
 .cta:not(:has(img)),.guide:not(:has(img)){display:block}
+.mi{border-radius:8px}.btn-max .mi{width:30px;height:30px;margin:0}.strip .mi{width:36px;height:36px}
+.ph{margin:20px 0}
+.ph img{width:100%;height:auto;border-radius:20px;display:block;box-shadow:0 4px 14px rgba(60,50,20,.15)}
