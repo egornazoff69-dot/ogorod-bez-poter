@@ -44,3 +44,22 @@ document.addEventListener('click', function (e) {
   }, { passive: true });
   el.querySelector('.exit-x').addEventListener('click', function () { el.hidden = true; });
 })();
+
+// опрос на главной: ответ запоминаем у читателя, итоги покажем, когда накопятся настоящие
+(function () {
+  var box = document.getElementById('poll');
+  if (!box) return;
+  var out = box.querySelector('.poll-a');
+  function show(opt) {
+    box.querySelectorAll('.rb').forEach(function (b) { b.classList.toggle('on', b.dataset.opt === opt); });
+    out.hidden = false;
+    out.innerHTML = 'Спасибо! Подсказки именно про это — в нашем канале в Максе: <a href="' +
+      document.querySelector('.btn-max').href + '" data-goal="poll_max">подписаться</a>';
+  }
+  var saved = localStorage.getItem('poll:main');
+  if (saved) show(saved);
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('.rb'); if (!b) return;
+    localStorage.setItem('poll:main', b.dataset.opt); show(b.dataset.opt);
+  });
+})();
