@@ -119,3 +119,4 @@ blockquote.gp p{margin:0}
 .mi{border-radius:8px}.btn-max .mi{width:30px;height:30px;margin:0}.strip .mi{width:36px;height:36px}
 .ph{margin:20px 0}
 .ph img{width:100%;height:auto;border-radius:20px;display:block;box-shadow:0 4px 14px rgba(60,50,20,.15)}
+.btn-max .mi,.strip .mi{background:#fff;padding:3px;border-radius:50%}
