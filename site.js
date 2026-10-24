@@ -1,4 +1,4 @@
-// цели Метрики: клик в канал Макса и в гайд
+// цели Метрики: клик в канал Макса и в справочник
 document.addEventListener('click', function (e) {
   var a = e.target.closest('[data-goal]');
   if (a && window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', a.dataset.goal);
@@ -84,13 +84,15 @@ document.addEventListener('click', function (e) {
   var box = document.getElementById('mon'); if (!box) return;
   var M = JSON.parse(box.dataset.months), T = JSON.parse(box.dataset.tips);
   var now = new Date(), m = now.getMonth() + 1, d = M[m];
-  document.getElementById('mon-name').textContent = d[0].toLowerCase().replace(/ь$/, 'е').replace(/т$/, 'те').replace(/й$/, 'е').replace(/я$/, 'е');
+  document.getElementById('mon-name').textContent = ['январе','феврале','марте','апреле','мае','июне','июле','августе','сентябре','октябре','ноябре','декабре'][m - 1];
   var key = 'mon:' + now.getFullYear() + '-' + m, saved = JSON.parse(localStorage.getItem(key) || '[]');
   var ul = document.getElementById('mon-list'), cnt = document.getElementById('mon-n'), done = document.getElementById('mon-done');
-  d[1].forEach(function (t, i) {
+  d[1].forEach(function (t, i) { // t = [текст, ссылка на статью]
     var li = document.createElement('li'); li.className = 'mon-i' + (saved.indexOf(i) > -1 ? ' ok' : '');
-    li.innerHTML = '<label><input type="checkbox"' + (saved.indexOf(i) > -1 ? ' checked' : '') + '><span></span></label>';
-    li.querySelector('span').textContent = t; ul.appendChild(li);
+    li.innerHTML = '<label><input type="checkbox"' + (saved.indexOf(i) > -1 ? ' checked' : '') + '><div><span></span></div></label>';
+    li.querySelector('span').textContent = t[0];
+    if (t[1]) { var a = document.createElement('a'); a.href = t[1]; a.className = 'mon-more'; a.textContent = 'Читать подробнее →'; li.querySelector('div').appendChild(a); }
+    ul.appendChild(li);
     li.querySelector('input').addEventListener('change', function (e) {
       var s = JSON.parse(localStorage.getItem(key) || '[]'), k = s.indexOf(i);
       if (e.target.checked && k < 0) s.push(i); if (!e.target.checked && k > -1) s.splice(k, 1);
@@ -102,6 +104,9 @@ document.addEventListener('click', function (e) {
     if (n === d[1].length && window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', 'mon_done');
   }
   upd();
+  var ph = document.getElementById('ph-msgs');
+  if (ph) { var E = ['❄️','❄️','🌱','🌷','🌷','☀️','☀️','🍅','🍂','🍂','🍁','🎄'];
+    ph.innerHTML = ''; d[1].forEach(function (t) { var x = document.createElement('div'); x.className = 'msg'; x.textContent = E[m - 1] + ' ' + t[0]; ph.appendChild(x); }); }
   var doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
   document.getElementById('tip-t').textContent = T[doy % T.length];
 })();
@@ -143,8 +148,8 @@ document.addEventListener('click', function (e) {
   var STAGES = ['🌰', '🌱', '🌿', '🌼', '🍅'];
   var NAMES = ['Семечко', 'Росток', 'Рассада', 'Цветёт', 'Урожай'];
   var TASKS = [
-    ['visit', 'Заглянуть на сайт'], ['read', 'Дочитать статью'], ['mon', 'Отметить задачу месяца'],
-    ['quiz', 'Пройти тест'], ['poll', 'Ответить в опросе']
+    ['visit', 'Заглянуть на сайт', ''], ['read', 'Дочитать любую статью до конца', '/#new'], ['mon', 'Отметить дело месяца на главной', '/#mon'],
+    ['quiz', 'Пройти тест из 6 вопросов', '/test/'], ['poll', 'Ответить в опросе на главной', '/#poll']
   ];
   var state = JSON.parse(localStorage.getItem('game') || '{"d":{},"days":[]}');
   function save() { localStorage.setItem('game', JSON.stringify(state)); }
@@ -165,8 +170,12 @@ document.addEventListener('click', function (e) {
   function openWin(final) {
     var n = done(), w = document.getElementById('gwin'), l = document.getElementById('gwin-l');
     document.getElementById('gwin-t').textContent = final ? 'Урожай собран! 🍅' : STAGES[Math.min(n, 4)] + ' ' + NAMES[Math.min(n, 4)];
-    document.getElementById('gwin-s').textContent = final ? 'Вы выполнили все пять действий. Заберите подарок: мини-гайд «7 ошибок с рассадой» в нашем канале.' : 'Выполните 5 действий — вырастите огород и получите подарок в Максе.';
-    l.innerHTML = ''; TASKS.forEach(function (t) { var li = document.createElement('li'); li.textContent = t[1]; if (state.d[t[0]]) li.className = 'ok'; l.appendChild(li); });
+    document.getElementById('gwin-s').textContent = final ? 'Вы выполнили все пять действий. Подарок — памятка «7 ошибок с рассадой» (PDF, 3 страницы) — ждёт вас в нашем канале в Максе, в закреплённом сообщении. Нажмите кнопку ниже, вступите в канал и скачайте её.' : 'Нажимайте на задания ниже — каждое засчитывается само. Выполните все пять, вырастите огород и получите подарок: памятку «7 ошибок с рассадой» в нашем канале в Максе.';
+    l.innerHTML = ''; TASKS.forEach(function (t) {
+      var li = document.createElement('li'), ok = state.d[t[0]];
+      if (ok) li.className = 'ok';
+      if (t[2] && !ok) { var a = document.createElement('a'); a.href = t[2]; a.textContent = t[1] + ' →'; a.addEventListener('click', function () { document.getElementById('gwin').hidden = true; }); li.appendChild(a); } else li.textContent = t[1];
+      l.appendChild(li); });
     document.getElementById('gwin-a').hidden = !final && n < 5; w.hidden = false;
   }
   G.addEventListener('click', function () { openWin(done() === 5); });
