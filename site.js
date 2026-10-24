@@ -63,3 +63,76 @@ document.addEventListener('click', function (e) {
     localStorage.setItem('poll:main', b.dataset.opt); show(b.dataset.opt);
   });
 })();
+
+// полоса прогресса чтения и плавающая кнопка в Макс (только статьи)
+(function () {
+  var pg = document.getElementById('pg'), stk = document.getElementById('stk');
+  if (!pg) return;
+  var closed = sessionStorage.getItem('stk-x');
+  var x = document.getElementById('stk-x');
+  if (x) x.addEventListener('click', function () { sessionStorage.setItem('stk-x', '1'); stk.hidden = true; closed = '1'; });
+  function upd() {
+    var h = document.documentElement, p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
+    pg.style.width = (Math.min(1, p) * 100) + '%';
+    if (stk && !closed) stk.hidden = !(p > 0.22 && p < 0.97);
+  }
+  window.addEventListener('scroll', upd, { passive: true }); upd();
+})();
+
+// «Что делать в этом месяце»: галочки с подсчётом + совет дня
+(function () {
+  var box = document.getElementById('mon'); if (!box) return;
+  var M = JSON.parse(box.dataset.months), T = JSON.parse(box.dataset.tips);
+  var now = new Date(), m = now.getMonth() + 1, d = M[m];
+  document.getElementById('mon-name').textContent = d[0].toLowerCase().replace(/ь$/, 'е').replace(/т$/, 'те').replace(/й$/, 'е').replace(/я$/, 'е');
+  var key = 'mon:' + now.getFullYear() + '-' + m, saved = JSON.parse(localStorage.getItem(key) || '[]');
+  var ul = document.getElementById('mon-list'), cnt = document.getElementById('mon-n'), done = document.getElementById('mon-done');
+  d[1].forEach(function (t, i) {
+    var li = document.createElement('li'); li.className = 'mon-i' + (saved.indexOf(i) > -1 ? ' ok' : '');
+    li.innerHTML = '<label><input type="checkbox"' + (saved.indexOf(i) > -1 ? ' checked' : '') + '><span></span></label>';
+    li.querySelector('span').textContent = t; ul.appendChild(li);
+    li.querySelector('input').addEventListener('change', function (e) {
+      var s = JSON.parse(localStorage.getItem(key) || '[]'), k = s.indexOf(i);
+      if (e.target.checked && k < 0) s.push(i); if (!e.target.checked && k > -1) s.splice(k, 1);
+      localStorage.setItem(key, JSON.stringify(s)); li.classList.toggle('ok', e.target.checked); upd();
+    });
+  });
+  function upd() {
+    var n = ul.querySelectorAll('input:checked').length; cnt.textContent = n; done.hidden = n < d[1].length;
+    if (n === d[1].length && window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', 'mon_done');
+  }
+  upd();
+  var doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+  document.getElementById('tip-t').textContent = T[doy % T.length];
+})();
+
+// тест готовности к сезону
+(function () {
+  var box = document.getElementById('quiz'); if (!box) return;
+  var Q = JSON.parse(box.dataset.q), i = 0, score = 0, started = false;
+  var qq = document.getElementById('qq'), qa = document.getElementById('qa'), qn = document.getElementById('qn'), bar = document.getElementById('qbar');
+  function goal(g) { if (window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', g); }
+  function show() {
+    qn.textContent = 'Вопрос ' + (i + 1) + ' из ' + Q.length; bar.style.width = (i / Q.length * 100) + '%';
+    qq.textContent = Q[i][0]; qa.innerHTML = '';
+    Q[i][1].forEach(function (a, k) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'rb'; b.textContent = a;
+      b.addEventListener('click', function () {
+        if (!started) { started = true; goal('quiz_start'); }
+        score += 2 - k; i++; i < Q.length ? show() : finish();
+      });
+      qa.appendChild(b);
+    });
+  }
+  function finish() {
+    bar.style.width = '100%'; qq.hidden = true; qa.hidden = true; qn.hidden = true;
+    var r = document.getElementById('qres'), t, s;
+    if (score <= 4) { t = 'Вы в начале пути'; s = 'Ничего страшного: до посева ещё есть время. Начните с трёх вещей: узнайте даты посева в калькуляторе, проверьте семена на всхожесть и подготовьте место со светом для рассады.'; }
+    else if (score <= 8) { t = 'Почти готовы'; s = 'Основа есть. Добейте слабые места: сверьте даты посева, подготовьте подсветку и грунт заранее, чтобы в марте не бегать по магазинам.'; }
+    else { t = 'Вы опытный огородник'; s = 'Всё готово к сезону. Осталось не упустить сроки и записывать результаты в дневник, чтобы в следующем году стало ещё лучше.'; }
+    r.innerHTML = '<p class="cta-t"></p><p class="qs"></p><p><a class="btn-big" href="/kalkulyator/" data-goal="quiz_calc">Узнать даты посева</a></p>';
+    r.querySelector('.cta-t').textContent = t + ' · ' + score + ' из ' + (Q.length * 2); r.querySelector('.qs').textContent = s;
+    r.hidden = false; document.getElementById('qcta').hidden = false; goal('quiz_done');
+  }
+  show();
+})();
