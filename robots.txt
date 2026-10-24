@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /spasibo/
+Disallow: /m/
 Sitemap: https://ogorod-bez-poter.ru/sitemap.xml
